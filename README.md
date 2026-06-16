@@ -68,11 +68,18 @@ Install-ADDSForest -DomainName "corp.lab" -InstallDNS
 ```
 Verified with `Get-ADDomain` and confirmed `ADWS`, `DNS`, and `Netlogon` services running.
 
+![Domain healthy](screenshots/01-domain-healthy.png)
+
 ### 5. OUs, users, and groups
 Built the `CORP` OU tree (Users / Computers / Groups), an `IT-Admins` security group, and the first domain users — all via PowerShell (`New-ADOrganizationalUnit`, `New-ADGroup`, `New-ADUser`).
 
+![OU structure](screenshots/02-ou-structure.png)
+![Security group members](screenshots/03-security-group.png)
+
 ### 6. Group Policy
 Created **`CORP-Security-Policy`**, linked it to the `CORP` OU, and configured *Interactive logon: Machine inactivity limit = 600 seconds* (auto screen-lock after 10 minutes).
+
+![GPO setting](screenshots/04-gpo-setting.png)
 
 ### 7. Join the Windows 10 client
 Set the client's static IP (`10.10.10.20`) and DNS (`10.10.10.10`), then joined it to `corp.lab` and renamed it `CLIENT01`.
@@ -86,11 +93,16 @@ reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v In
 :: InactivityTimeoutSecs  REG_DWORD  0x258   (= 600 seconds ✔)
 ```
 
+![Domain login proof](screenshots/06-domain-login.png)
+![GPO applied on client](screenshots/05-gpo-applied-client.png)
+
 ### 9. Bulk user provisioning (PowerShell + CSV)
 Created 10 users from a CSV with one reusable, **idempotent** script — see [`scripts/Create-BulkUsers.ps1`](scripts/Create-BulkUsers.ps1).
 ```powershell
 powershell -ExecutionPolicy Bypass -File C:\ADLab\Create-BulkUsers.ps1
 ```
+
+![Bulk users created](screenshots/07-bulk-users.png)
 
 ---
 
